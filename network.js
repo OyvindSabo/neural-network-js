@@ -1,4 +1,4 @@
-const { randomWeight } = require('./networkUtils');
+const { feedForward, randomWeight, toOneOrZero } = require('./networkUtils');
 
 const createNetwork = ({ inputLength, hiddenLength, outputLength }) => {
 
@@ -45,47 +45,37 @@ const createNetwork = ({ inputLength, hiddenLength, outputLength }) => {
   return network;
 }
 
-const feedForward = (network, input) => {
-  const { inputLayer, hiddenLayer, outputLayer } = network;
-  if (input.length !== inputLayer.length) {
-    console.log('ERROR: Length of input data is not equal to length of input layer');
-  }
-  
-  // Set input layer values
-  inputLayer.forEach((inputNode, index) => {
-    inputNode.value = input[index];
-  })
-  
-  // Calculate hidden layer values
-  hiddenLayer.forEach(hiddenNode => {
-    hiddenNode.value = 0;
-    hiddenNode.inE.forEach(inE => {
-      hiddenNode.value += inE.weight * inE.outV.value;
-    })
-  })
+const trainNetwork = (network, trainingData, { maxWeight, maxError }) => {
 
-  // Calculate output layer values
-  outputLayer.forEach(outputNode => {
-    outputNode.value = 0;
-    outputNode.inE.forEach(inE => {
-      outputNode.value += inE.weight * inE.outV.value;
-    })
-  })
+  // For all trainingData, run the network and calculate the total error
+  let errorForThisIteration;
+  do {
+    // Assign random weights to all edges
+    for (let edge of network.edges) {
+      edge.weight = randomWeight(maxWeight);
+    }
+    
+    errorForThisIteration = 0;
+    trainingData.forEach(({ input, output }) => {
+      feedForward(network, input);
+      const errorForThisTrainingData = network.outputLayer
+        .map((outputNode, index) => {
+          const actualOutput = outputNode.value;
+          const targetOutput = output[index];
+          const difference = actualOutput - targetOutput;
+          return Math.pow(difference, 2);
+        })
+        .reduce((a, b) => a + b, 0);
+      errorForThisIteration += errorForThisTrainingData;
+    });
+  } while (errorForThisIteration > maxError);
+  console.log('errorForThisIteration: ', errorForThisIteration);
 }
 
 const getOutput = (network, input) => {
   feedForward(network, input);
-  return network.outputLayer.map(outputNode => outputNode.value);
-}
-
-const trainNetwork = (network, trainingData, iterations) => {
-  
-  // Assign random weights to all edges
-  for (let edge of network.edges) {
-    edge.weight = randomWeight();
-  }
-
-  // For all trainingData, run the network and calculate the total error
+  const outputValues = network.outputLayer.map(outputNode => outputNode.value);
+  return outputValues;
 }
 
 module.exports = { createNetwork, getOutput, trainNetwork };
