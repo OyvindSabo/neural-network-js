@@ -1,7 +1,7 @@
 const sigmoid = x =>  1 / (1 + Math.pow(Math.E, -x));
 const differentiatedSigmoid = x => sigmoid(x) * (1 - sigmoid(x));
 
-const feedForward = (network, input) => {
+const feedForward = (network, input, useNewWeights) => {
   const { inputLayer, hiddenLayer, outputLayer } = network;
   if (input.length !== inputLayer.length) {
     console.log('ERROR: Length of input data is not equal to length of input layer');
@@ -16,7 +16,7 @@ const feedForward = (network, input) => {
   hiddenLayer.forEach(hiddenNode => {
     hiddenNode.value = 0;
     hiddenNode.inE.forEach(inE => {
-      hiddenNode.value += inE.weight * inE.outV.value;
+      hiddenNode.value += (useNewWeights ? inE.newWeight : inE.currentWeight) * inE.outV.value;
     });
     hiddenNode.value = sigmoid(hiddenNode.value);
   });
@@ -25,7 +25,7 @@ const feedForward = (network, input) => {
   outputLayer.forEach(outputNode => {
     outputNode.value = 0;
     outputNode.inE.forEach(inE => {
-      outputNode.value += inE.weight * inE.outV.value;
+      outputNode.value += (useNewWeights ? inE.newWeight : inE.currentWeight) * inE.outV.value;
     });
     outputNode.value = sigmoid(outputNode.value);
   });
@@ -34,9 +34,29 @@ const feedForward = (network, input) => {
 const getHiddenLength = (inputLength, outputLength) =>
   Math.ceil((inputLength + outputLength) / 2);
 
+// Increases or decreases a number with a value between 0 and 1
+const randomMutation = (weight, learningRate) => weight + Math.random() - Math.random();
+
 // Generates a random number between -1 and 1
-const randomWeight = (maxWeight) => (Math.random() - Math.random()) * maxWeight;
+const randomWeight = maxWeight => (Math.random() - Math.random()) * maxWeight;
+
+const getError = (network, trainingData, useNewWeights) => {
+  errorForThisIteration = 0;
+    trainingData.forEach(({ input, output }) => {
+      feedForward(network, input, useNewWeights);
+      const errorForThisTrainingData = network.outputLayer
+        .map((outputNode, index) => {
+          const actualOutput = outputNode.value;
+          const targetOutput = output[index];
+          const difference = actualOutput - targetOutput;
+          return Math.pow(difference, 2);
+        })
+        .reduce((a, b) => a + b, 0);
+      errorForThisIteration += errorForThisTrainingData;
+    });
+  return errorForThisIteration;
+}
 
 const toOneOrZero = array => array.map(element => element >= 0.5 ? 1 : 0);
 
-module.exports = { feedForward, randomWeight, toOneOrZero };
+module.exports = { feedForward, getError, randomMutation, randomWeight, toOneOrZero };

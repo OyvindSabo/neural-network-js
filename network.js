@@ -1,4 +1,4 @@
-const { feedForward, randomWeight, toOneOrZero } = require('./networkUtils');
+const { feedForward, getError, randomMutation, randomWeight, toOneOrZero } = require('./networkUtils');
 
 const createNetwork = ({ inputLength, hiddenLength, outputLength }) => {
 
@@ -24,7 +24,7 @@ const createNetwork = ({ inputLength, hiddenLength, outputLength }) => {
   const edges = [];
   for (let inputNode of inputLayer) {
     for (let hiddenNode of hiddenLayer) {
-      const edge = { outV: inputNode, inV: hiddenNode, weight: undefined };
+      const edge = { outV: inputNode, inV: hiddenNode, currentWeight: undefined, newWeight: undefined };
       inputNode.outE.push(edge);
       hiddenNode.inE.push(edge);
       edges.push(edge);
@@ -34,7 +34,7 @@ const createNetwork = ({ inputLength, hiddenLength, outputLength }) => {
   // Create edges from hiddenLayer to outputLayer
   for (let hiddenNode of hiddenLayer) {
     for (let outputNode of outputLayer) {
-      const edge = { outV: hiddenNode, inV: outputNode, weight: undefined };
+      const edge = { outV: hiddenNode, inV: outputNode, currentWeight: undefined, newWeight: undefined };
       hiddenNode.outE.push(edge);
       outputNode.inE.push(edge);
       edges.push(edge);
@@ -45,30 +45,31 @@ const createNetwork = ({ inputLength, hiddenLength, outputLength }) => {
   return network;
 }
 
-const trainNetwork = (network, trainingData, { maxWeight, maxError }) => {
+const trainNetwork = (network, trainingData, { maxWeight, maxError, learningRate }) => {
 
-  // For all trainingData, run the network and calculate the total error
-  let errorForThisIteration;
+  // Assign random weights to all edges
+  for (let edge of network.edges) {
+    edge.currentWeight = randomWeight(maxWeight);
+  }
+  // Find the error given by the current weights
+  let currentError = getError(network, trainingData, false)
+  let newError;
+
+  // While the error is still above maxError, mutate all weights and update current weights if the new weights result in a lower error
   do {
-    // Assign random weights to all edges
+    // Mutate all edges slightly
     for (let edge of network.edges) {
-      edge.weight = randomWeight(maxWeight);
+      edge.newWeight = randomMutation(edge.currentWeight, learningRate);
     }
-    
-    errorForThisIteration = 0;
-    trainingData.forEach(({ input, output }) => {
-      feedForward(network, input);
-      const errorForThisTrainingData = network.outputLayer
-        .map((outputNode, index) => {
-          const actualOutput = outputNode.value;
-          const targetOutput = output[index];
-          const difference = actualOutput - targetOutput;
-          return Math.pow(difference, 2);
-        })
-        .reduce((a, b) => a + b, 0);
-      errorForThisIteration += errorForThisTrainingData;
-    });
-  } while (errorForThisIteration > maxError);
+    newError = getError(network, trainingData, true);
+    if (newError < currentError) {
+      console.log('currentError: ', currentError);
+      for (let edge of network.edges) {
+        edge.currentWeight = edge.newWeight;
+        currentError = newError;
+      }
+    }
+  } while (currentError > maxError);
   console.log('errorForThisIteration: ', errorForThisIteration);
 }
 
