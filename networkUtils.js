@@ -31,9 +31,6 @@ const feedForward = (network, input, useNewWeights) => {
   });
 }
 
-const getHiddenLength = (inputLength, outputLength) =>
-  Math.ceil((inputLength + outputLength) / 2);
-
 // Increases or decreases a number with a value between 0 and 1
 const randomMutation = (weight, learningRate) => weight + Math.random() - Math.random();
 
