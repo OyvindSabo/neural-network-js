@@ -8,7 +8,7 @@ const config = {
   hiddenLength: 3,
   outputLength: 1,
   // For training the network
-  learningRate: 500,
+  learningRate: 10,
   maxWeight: 50,
   maxError: 0.00000000000001,
 };

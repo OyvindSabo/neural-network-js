@@ -27,15 +27,12 @@ const feedForward = (network, input, useNewWeights) => {
     outputNode.inE.forEach(inE => {
       outputNode.value += (useNewWeights ? inE.newWeight : inE.currentWeight) * inE.outV.value;
     });
-    outputNode.value = sigmoid(outputNode.value);
+    //outputNode.value = sigmoid(outputNode.value);
   });
 }
 
 // Increases or decreases a number with a value between 0 and 1
-const randomMutation = (weight, learningRate) => weight + Math.random() - Math.random();
-
-// Generates a random number between -1 and 1
-const randomWeight = maxWeight => (Math.random() - Math.random()) * maxWeight;
+const randomMutation = (weight, mutationFactor) => weight + (Math.random() - Math.random()) * mutationFactor;
 
 const getError = (network, trainingData, useNewWeights) => {
   errorForThisIteration = 0;
@@ -56,4 +53,4 @@ const getError = (network, trainingData, useNewWeights) => {
 
 const toOneOrZero = array => array.map(element => element >= 0.5 ? 1 : 0);
 
-module.exports = { feedForward, getError, randomMutation, randomWeight, toOneOrZero };
+module.exports = { feedForward, getError, randomMutation, toOneOrZero };
