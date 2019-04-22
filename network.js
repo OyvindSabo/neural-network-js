@@ -72,11 +72,11 @@ const trainNetwork = (network, trainingData, { maxError, learningRate }) => {
     if (newError < currentError) {
       console.log('currentError: ', currentError, '\n');
       // <THe following three lines are just for temporary tests and should be removed
-      console.log('getOutput(network, waveHeightArray.slice(1100, 1200)): ', getOutput(network, waveHeightArray.slice(1100, 1200)));
+      console.log('getOutput(network, waveHeightArray.slice(1100, 2100)): ', getOutput(network, waveHeightArray.slice(1100, 2100)));
       console.log('');
-      console.log('The actual waveheight at time 1209: ', waveHeightArray[1209]);
-      console.log('The actual waveheight at time 1210: ', waveHeightArray[1210]);
-      console.log('The actual waveheight at time 1211: ', waveHeightArray[1211]);
+      console.log('The actual waveheight at time 2109: ', waveHeightArray[2109]);
+      console.log('The actual waveheight at time 2110: ', waveHeightArray[2110]);
+      console.log('The actual waveheight at time 2111: ', waveHeightArray[2111]);
       for (let edge of network.edges) {
         edge.currentWeight = edge.newWeight;
         currentError = newError;
