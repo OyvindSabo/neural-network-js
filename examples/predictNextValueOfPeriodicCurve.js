@@ -3,7 +3,7 @@ const { createNetwork, getOutput, trainNetwork } = require('../network');
 const config = {
   // For creating the network
   inputLength: 36,
-  hiddenLength: 18, //36 works well
+  hiddenLength: 18, //36 works as well
   outputLength: 1,
   // For training the network
   learningRate: 0.1,

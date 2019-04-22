@@ -1,3 +1,9 @@
+// The three next lines are just for testing purposes and should be removed
+const fs = require('fs');
+const waveHeights = fs.readFileSync(`${__dirname}/waveHeights.txt`, 'utf8');
+const waveHeightArray = waveHeights.split('\n').map(e => parseFloat(e));
+
+
 const { feedForward, getError, randomMutation, toOneOrZero } = require('./networkUtils');
 
 const createNetwork = ({ inputLength, hiddenLength, outputLength }) => {
@@ -65,6 +71,12 @@ const trainNetwork = (network, trainingData, { maxError, learningRate }) => {
     newError = getError(network, trainingData, true);
     if (newError < currentError) {
       console.log('currentError: ', currentError, '\n');
+      // <THe following three lines are just for temporary tests and should be removed
+      console.log('getOutput(network, waveHeightArray.slice(1100, 1200)): ', getOutput(network, waveHeightArray.slice(1100, 1200)));
+      console.log('');
+      console.log('The actual waveheight at time 1209: ', waveHeightArray[1209]);
+      console.log('The actual waveheight at time 1210: ', waveHeightArray[1210]);
+      console.log('The actual waveheight at time 1211: ', waveHeightArray[1211]);
       for (let edge of network.edges) {
         edge.currentWeight = edge.newWeight;
         currentError = newError;
