@@ -51,4 +51,22 @@ const getError = (network, trainingData, useNewWeights) => {
   return errorForThisIteration;
 }
 
-module.exports = { feedForward, getError, randomMutation };
+const visualizeError = error => {
+  console.log('visualizeError');
+  let errorVisualization = '\n';
+  errorVisualization += '10 000    1 000      100        10        1        0.1       0.01     0.001\n';
+  errorVisualization += '┌─┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─┐\n';
+  errorVisualization += '│';
+  const xIndex = 41-10*Math.log10(error);
+  for (let i = 0; i < xIndex; i++) {
+    errorVisualization += ' ';
+  }
+  for (let i = 0; i < 72-xIndex; i++) {
+    errorVisualization += '█';
+  }
+  errorVisualization += '│\n';
+  errorVisualization += '└─────────────────────────────────────────────────────────────────────────┘';
+  console.log(errorVisualization);
+};
+
+module.exports = { feedForward, getError, randomMutation, visualizeError };

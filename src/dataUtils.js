@@ -10,7 +10,7 @@ const generateTrainingData = (
     distanceFromInputToOutput
   }
 ) => {
-  const dataTextFile = fs.readFileSync(`${__dirname}/${fileName}`, "utf8");
+  const dataTextFile = fs.readFileSync(`${fileName}`, "utf8");
   const dataArray = dataTextFile.split("\n").map(e => parseFloat(e));
   const trainingData = [];
   const trainingDataLength =

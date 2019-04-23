@@ -1,4 +1,4 @@
-const { createNetwork, getOutput, trainNetwork } = require('../network');
+const { createNetwork, getOutput, trainNetwork } = require('../src/network');
 
 const config = {
   // For creating the network
