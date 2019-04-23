@@ -3,6 +3,7 @@ const fs = require("fs");
 const generateTrainingData = (
   fileName,
   {
+    numberOfFirstValuesToSkip,
     amountOfDataToUseForTraining,
     inputLength,
     outputLength,
@@ -14,11 +15,12 @@ const generateTrainingData = (
   const trainingData = [];
   const trainingDataLength =
     amountOfDataToUseForTraining -
+    numberOfFirstValuesToSkip -
     inputLength -
     distanceFromInputToOutput -
     outputLength;
   for (let i = 0; i < trainingDataLength; i++) {
-    const inputStartIndex = i;
+    const inputStartIndex = numberOfFirstValuesToSkip + i;
     const inputEndIndex = inputStartIndex + inputLength;
     const outputStartIndex = inputEndIndex + distanceFromInputToOutput;
     const outputEndIndex = outputStartIndex + outputLength;

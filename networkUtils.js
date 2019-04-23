@@ -51,6 +51,4 @@ const getError = (network, trainingData, useNewWeights) => {
   return errorForThisIteration;
 }
 
-const toOneOrZero = array => array.map(element => element >= 0.5 ? 1 : 0);
-
-module.exports = { feedForward, getError, randomMutation, toOneOrZero };
+module.exports = { feedForward, getError, randomMutation };
