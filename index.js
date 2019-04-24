@@ -15,7 +15,7 @@ const network = createNetwork(networkConfig);
 // Generate training data
 const trainingDataConfig = {
   numberOfFirstValuesToSkip: 100,
-  amountOfDataToUseForTraining: 2000,
+  amountOfDataToUseForTraining: 10000,
   inputLength: 100,
   outputLength: 1,
   distanceFromInputToOutput: 10
@@ -27,7 +27,7 @@ const trainingData = generateTrainingData(
 
 // Train network
 const trainingConfig = {
-  learningRate: 0.0001,
+  learningRate: 0.01,
   maxError: 0.00001,
   outputFileName: "./data/weights.txt"
 };
