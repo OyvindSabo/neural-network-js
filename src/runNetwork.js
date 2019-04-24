@@ -6,4 +6,4 @@ const runNetwork = (network, input) => {
   return outputValues;
 }
 
-module.exports = { runNetwork };
+module.exports = runNetwork;

@@ -1,10 +1,11 @@
-const { getError, randomMutation, visualizeError } = require('./networkUtils');
+const fs = require("fs");
+const { getError, randomMutation, visualizeError, writeWeightsToFile } = require('./networkUtils');
 
-const trainNetwork = (network, trainingData, { maxError, learningRate }) => {
+const trainNetwork = (network, trainingData, { maxError, learningRate, outputFileName }) => {
 
-  // Assign a weight of 0 to all edges
+  // Assign a weight of 0 to all edges if they don't already have weights
   for (let edge of network.edges) {
-    edge.currentWeight = 0;
+    edge.currentWeight = edge.currentWeight || 0;
   }
   // Find the error given by the current weights
   let currentError = getError(network, trainingData, false)
@@ -25,9 +26,10 @@ const trainNetwork = (network, trainingData, { maxError, learningRate }) => {
         edge.currentWeight = edge.newWeight;
         currentError = newError;
       }
+      writeWeightsToFile(network, outputFileName);
     }
   } while (currentError > maxError);
   console.log('errorForThisIteration: ', errorForThisIteration);
 }
 
-module.exports = { trainNetwork };
+module.exports = trainNetwork;

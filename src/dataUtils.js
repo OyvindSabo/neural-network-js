@@ -1,5 +1,16 @@
 const fs = require("fs");
 
+const readArrayFromTextFile = fileName => {
+  const dataTextFile = fs.readFileSync(`${fileName}`, "utf8");
+  const dataArray = dataTextFile.split("\n").map(e => parseFloat(e));
+  return dataArray;
+};
+
+const writeArrayToTextFile = (dataArray, fileName) => {
+  dataTextFile = dataArray.join("\n");
+  fs.writeFileSync(`${fileName}`, dataTextFile);
+};
+
 const generateTrainingData = (
   fileName,
   {
@@ -10,8 +21,7 @@ const generateTrainingData = (
     distanceFromInputToOutput
   }
 ) => {
-  const dataTextFile = fs.readFileSync(`${fileName}`, "utf8");
-  const dataArray = dataTextFile.split("\n").map(e => parseFloat(e));
+  const dataArray = readArrayFromTextFile(fileName);
   const trainingData = [];
   const trainingDataLength =
     amountOfDataToUseForTraining -
@@ -33,5 +43,7 @@ const generateTrainingData = (
 };
 
 module.exports = {
+  readArrayFromTextFile,
+  writeArrayToTextFile,
   generateTrainingData
 };
