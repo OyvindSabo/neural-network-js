@@ -14,7 +14,7 @@ const trainNetwork = (network, trainingData, { maxError, learningRate, outputFil
   // While the error is still above maxError, mutate all weights and update current weights if the new weights result in a lower error
   do {
     // Mutate all edges slightly
-    const mutationFactor = Math.min(learningRate, learningRate * currentError);
+    const mutationFactor = learningRate * currentError;
     for (let edge of network.edges) {
       edge.newWeight = randomMutation(edge.currentWeight, mutationFactor);
     }
