@@ -48,7 +48,7 @@ const getError = (network, trainingData, useNewWeights) => {
         const actualOutput = outputNode.value;
         const targetOutput = output[index];
         const difference = actualOutput - targetOutput;
-        return Math.pow(difference, 2);
+        return Math.pow(difference, 4);
       })
       .reduce((a, b) => a + b, 0);
     errorForThisIteration += errorForThisTrainingData;
