@@ -27,7 +27,7 @@ const trainingData = generateTrainingData(
 
 // Train network
 const trainingConfig = {
-  learningRate: 0.0000001,
+  learningRate: 0.00000001,
   maxError: 0.00001,
   outputFileName: "./data/weights.txt"
 };
